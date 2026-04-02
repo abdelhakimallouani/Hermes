@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useState, useEffect} from 'react'
+import TaskInput from './components/TaskInput'
+import TaskList from './components/TaskList'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
+  
   return (
     <>
-      <div className="text-center mt-50"> <h1>Welcome to Vite</h1> </div>
+      <h1 className="text-center mt-10">Hermes App</h1>
+      {/* <TaskInput addTask={addTask} /> */}
+      <TaskList />
     </>
   )
 }
-
 export default App
