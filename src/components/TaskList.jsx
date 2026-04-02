@@ -1,9 +1,14 @@
-import React from "react";
+import {useState, useEffect} from "react";
 
 export default function TaskList() {
 
-    const [title, setTitle] = React.useState('');
-    const [tasks, setTasks] = React.useState([]);
+    const [title, setTitle] = useState('');
+    const [tasks, setTasks] = useState([]);
+    const [filter, setFilter] = useState('all');
+
+    useEffect(() => {
+        console.log('Tasks updated:', tasks);
+    }, [tasks]);
 
     const addTask = (title) => {
         const newTask = {
@@ -12,8 +17,10 @@ export default function TaskList() {
             completed: false,
             created_at: new Date(),
         };
+        console.log(newTask);
         setTasks([...tasks, newTask]);
         console.log(tasks);
+        
     };
 
     const deleteTask = (id) => {
@@ -34,10 +41,24 @@ export default function TaskList() {
         e.preventDefault()
         if (title.trim() === '') return;
         addTask(title)
-        console.log(title);
-        console.log(tasks);
+        // console.log(title);
+        // console.log(tasks);
         setTitle('')
+        console.log(tasks);
     }
+
+    const filterTasks = (filter) => {
+        switch (filter) {
+            case 'all':
+                return tasks;
+            case 'pending':
+                return tasks.filter(task => !task.completed);
+            case 'completed':
+                return tasks.filter(task => task.completed);
+            default:
+                return tasks;
+        }
+    };
 
     return (
         <>
@@ -48,15 +69,15 @@ export default function TaskList() {
                 </button>
             </form>
             <div className="flex gap-4 mb-4">
-                <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer">All</button>
-                <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer">Pending</button>
-                <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer">Completed</button>
+                <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer" onClick={() => setFilter('all')}>All</button>
+                <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer" onClick={() => setFilter('pending')}>Pending</button>
+                <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer" onClick={() => setFilter('completed')}>Completed</button>
             </div>
 
             <ul className="space-y-2 flex flex-col gap-2">
                 {
-                tasks.length > 0 ? (
-                    tasks.map(task => {
+                filterTasks(filter).length > 0 ? (
+                    filterTasks(filter).map(task => {
                         return (
                             <li key={task.id}>
                                 {task.title} - 
