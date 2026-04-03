@@ -5,6 +5,7 @@ export default function TaskList() {
     const [title, setTitle] = useState('');
     const [tasks, setTasks] = useState([]);
     const [filter, setFilter] = useState('all');
+    
 
     useEffect(() => {
         console.log('Tasks updated:', tasks);
@@ -59,6 +60,26 @@ export default function TaskList() {
                 return tasks;
         }
     };
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+
+        console.log('save', tasks);
+        const data = JSON.parse(localStorage.getItem('tasks'));
+        // console.log(data);
+        if (data !== null) {
+            setTasks(data);
+        }
+            setLoaded(true);
+    }, []);
+
+    useEffect(() => {
+        if (loaded) {
+            console.log('save', tasks);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+    }, [tasks, loaded]);
+
 
     return (
         <>
@@ -82,7 +103,7 @@ export default function TaskList() {
                             <li key={task.id}>
                                 {task.title} - 
                                 {task.completed ? ' (Completed)' : ' (Pending)'} - Created on: 
-                                {task.created_at.toLocaleDateString()}
+                                {new Date(task.created_at).toLocaleDateString()}
                                 <button onClick={() => deleteTask(task.id)} className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer">- Delete</button>
                                 <button onClick={() => markCompleted(task.id)} className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer"> - Mark as Completed</button>
                             </li>
